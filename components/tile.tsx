@@ -131,6 +131,8 @@ const TileGrid: React.FC<TileGridProps> = () => {
 
       if (allTilesMatched) {
         // Show modal with placeholder text
+        dispatch(addScore(timer*100));
+        setTimer(0);
         setModalOpen(true);
         setGameOver(false);
       }
