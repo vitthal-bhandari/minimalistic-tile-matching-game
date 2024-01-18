@@ -75,7 +75,7 @@ const TileGrid: React.FC<TileGridProps> = () => {
 
   // Function to handle game reset
   const resetGame = () => {
-    setTimer(60);
+    setTimer(45);
     setGameOver(false);
     setClickedTiles(Array(16).fill(false));
     setPrevClickedTile({ index: -1, icon: null });
