@@ -1,11 +1,11 @@
 // Import necessary React and Material-UI components
 import React, { useEffect, useState } from 'react';
-import { Grid, Paper, Icon, Modal, Button } from '@mui/material';
+import { Grid, Paper, Icon, Modal, Button, Box, Typography } from '@mui/material';
 import { AssignmentIndTwoTone as icon1, AssignmentTwoTone as icon2, BugReportTwoTone as icon3, 
   CastConnectedTwoTone as icon4, CastTwoTone as icon5, ChatTwoTone as icon6, ReportProblemTwoTone as icon7, 
   VolunteerActivismTwoTone as icon8 } from '@mui/icons-material';
 import { useAppSelector, useAppDispatch } from "@/redux/hooks"
-import { addScore } from "@/redux/features/addScore/addScoreSlice"
+import { addScore, setScore } from "@/redux/features/addScore/addScoreSlice"
 
 // Define the TileGridProps type
 interface TileGridProps {}
@@ -14,6 +14,8 @@ interface TileGridProps {}
 const TileGrid: React.FC<TileGridProps> = () => {
 
   const score = useAppSelector(state => state.todoReducer.score);
+  const highscore = useAppSelector(state => state.todoReducer.highscore);
+
   const dispatch = useAppDispatch()
 
   // State to track the clicked tiles
@@ -23,7 +25,7 @@ const TileGrid: React.FC<TileGridProps> = () => {
   const [prevClickedTile, setPrevClickedTile] = useState<{ index: number, icon: React.FC | null }>({ index: -1, icon: null });
 
   // State for the countdown timer
-  const [timer, setTimer] = useState<number>(60);
+  const [timer, setTimer] = useState<number>(45);
 
   // State to track whether the game is over
   const [gameOver, setGameOver] = useState<boolean>(false);
@@ -77,19 +79,31 @@ const TileGrid: React.FC<TileGridProps> = () => {
     setGameOver(false);
     setClickedTiles(Array(16).fill(false));
     setPrevClickedTile({ index: -1, icon: null });
+    setModalOpen(false);
+    dispatch(setScore(0));
   };
 
   // Sample icons for the tiles
   const icons: React.FC[] = [icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8];
 
   // Generate pairs of icons for the tiles
-  const tileIcons: React.FC[] = [...icons, ...icons];
+  const initialTileIcons: React.FC[] = [...icons, ...icons];
+
+  // State to store the shuffled array
+  const [tileIcons, setTileIcons] = useState<React.FC[]>(initialTileIcons);
 
   useEffect(() => {
     // Shuffle the array of icons
-    tileIcons.sort(() => Math.random() - 0.5);
-    
+    const shuffledIcons = [...initialTileIcons];
+    for (let i = shuffledIcons.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledIcons[i], shuffledIcons[j]] = [shuffledIcons[j], shuffledIcons[i]];
+    }
+
+    // Set the shuffled array in the state
+    setTileIcons(shuffledIcons);
   }, []); // empty dependency array ensures it runs once after the initial render
+
 
   // Countdown timer effect
   useEffect(() => {
@@ -105,10 +119,20 @@ const TileGrid: React.FC<TileGridProps> = () => {
   useEffect(() => {
     if (timer === 0) {
       const unmatchedTilesExist = clickedTiles.some((clicked) => !clicked);
+      
       if (unmatchedTilesExist) {
         // Show modal with placeholder text
         setModalOpen(true);
         setGameOver(true);
+      }
+    }
+    else{
+      const allTilesMatched = clickedTiles.every((clicked) => clicked)
+
+      if (allTilesMatched) {
+        // Show modal with placeholder text
+        setModalOpen(true);
+        setGameOver(false);
       }
     }
   }, [timer, clickedTiles]);
@@ -118,18 +142,41 @@ const TileGrid: React.FC<TileGridProps> = () => {
       container
       direction="column"
       justifyContent="center"
+      alignContent="center"
     >
-      <Grid item >
-        {score}
-      </Grid>
       <Grid item>
-      <div>
-        Timer: {timer}
-      </div>
+        <Grid container>
+          <Grid item xs={8}>
+            <Typography  variant="h3" component="h1">
+              Match the Tiles
+            </Typography>
+          </Grid>
+          <Grid item xs={4} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <Grid container direction="column">
+              <Grid item>
+                <Typography>
+                  score: {score}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography>
+                  high score: {highscore}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography>
+                  time: {timer}
+                </Typography>
+              </Grid>
+            </Grid>
+            
+          </Grid>
+        </Grid>
       </Grid>
       <Grid container columns={{ xs: 8 }} sx={{
           width: '400px',
-          height: '400px'
+          height: '400px',
+          marginTop: '20px'
       }}
       >
         {tileIcons.map((_, index) => (
@@ -148,10 +195,11 @@ const TileGrid: React.FC<TileGridProps> = () => {
               onClick={() => handleTileClick(index)}
             >
               {clickedTiles[index] && 
-              <Icon key={index}>
-                {React.createElement(tileIcons[index], {
+              <Icon key={index} sx={{ fontSize: "40px", display: "flex", justifyContent: "center", alignContent: "center" }}>
+                {(React.createElement(tileIcons[index], {
                   // Add any props you want to pass to the icon
-                })}
+                  style: { fontSize: "40px" },
+                }) as any )}
               </Icon>
               }
             </Paper>
@@ -160,15 +208,31 @@ const TileGrid: React.FC<TileGridProps> = () => {
       </Grid>
       {/* Modal for placeholder text */}
       <Modal open={modalOpen} onClose={handleCloseModal}>
-        <div>
-          <h2>{gameOver ? 'Game Over' : 'Restart Game'}</h2>
-          {gameOver ? (
-            <p>Unmatched tiles left! Display your placeholder text here.</p>
+      <Box 
+      sx={{
+        position: 'absolute' as 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+      }}
+      >
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+        {gameOver ? 'Game Over' : 'Restart Game'}
+        </Typography>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+        {gameOver ? (
+            'Unmatched tiles left! Sorry but you ran out of time.'
           ) : (
-            <p>Click the restart button to play again.</p>
+            `Congratulations! You've matched all tiles!`
           )}
-          <Button onClick={resetGame}>Restart</Button>
-        </div>
+        </Typography>
+        <Button onClick={resetGame} sx={{padding: '0', marginTop: '16px'}}>Restart</Button>
+      </Box>
       </Modal>
     </Grid>
 
