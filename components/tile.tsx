@@ -1,6 +1,6 @@
 // Import necessary React and Material-UI components
 import React, { useEffect, useState } from 'react';
-import { Grid, Paper, Icon, Modal, Button, Box, Typography } from '@mui/material';
+import { Grid, Paper, Icon, Modal, Button, Box, Typography, IconProps } from '@mui/material';
 import { AssignmentIndTwoTone as icon1, AssignmentTwoTone as icon2, BugReportTwoTone as icon3, 
   CastConnectedTwoTone as icon4, CastTwoTone as icon5, ChatTwoTone as icon6, ReportProblemTwoTone as icon7, 
   VolunteerActivismTwoTone as icon8 } from '@mui/icons-material';
@@ -196,10 +196,10 @@ const TileGrid: React.FC<TileGridProps> = () => {
             >
               {clickedTiles[index] && 
               <Icon key={index} sx={{ fontSize: "40px", display: "flex", justifyContent: "center", alignContent: "center" }}>
-                {(React.createElement(tileIcons[index], {
+                {React.createElement(tileIcons[index], {
                   // Add any props you want to pass to the icon
                   style: { fontSize: "40px" },
-                }) as any )}
+                } as IconProps )}
               </Icon>
               }
             </Paper>
