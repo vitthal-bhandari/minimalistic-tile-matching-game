@@ -1,6 +1,6 @@
 // Import necessary React and Material-UI components
 import React, { useEffect, useState } from 'react';
-import { Grid, Paper, Icon, Modal, Button, Box, Typography, IconProps } from '@mui/material';
+import { Grid, Paper, Icon, Modal, Button, Box, Typography, IconProps, DialogProps, useTheme  } from '@mui/material';
 import { AssignmentIndTwoTone as icon1, AssignmentTwoTone as icon2, BugReportTwoTone as icon3, 
   CastConnectedTwoTone as icon4, CastTwoTone as icon5, ChatTwoTone as icon6, ReportProblemTwoTone as icon7, 
   VolunteerActivismTwoTone as icon8 } from '@mui/icons-material';
@@ -25,7 +25,7 @@ const TileGrid: React.FC<TileGridProps> = () => {
   const [prevClickedTile, setPrevClickedTile] = useState<{ index: number, icon: React.FC | null }>({ index: -1, icon: null });
 
   // State for the countdown timer
-  const [timer, setTimer] = useState<number>(45);
+  const [timer, setTimer] = useState<number>(30);
 
   // State to track whether the game is over
   const [gameOver, setGameOver] = useState<boolean>(false);
@@ -65,7 +65,9 @@ const TileGrid: React.FC<TileGridProps> = () => {
   };
 
   // Function to handle modal close
-  const handleCloseModal = () => {
+  const handleCloseModal: DialogProps["onClose"] = (event, reason) => {
+    if (reason && reason === "backdropClick")
+        return;
     setModalOpen(false);
     if (gameOver) {
       // If the modal is closed and the game is over, reset the game
@@ -75,7 +77,7 @@ const TileGrid: React.FC<TileGridProps> = () => {
 
   // Function to handle game reset
   const resetGame = () => {
-    setTimer(45);
+    setTimer(30);
     setGameOver(false);
     setClickedTiles(Array(16).fill(false));
     setPrevClickedTile({ index: -1, icon: null });
@@ -138,6 +140,25 @@ const TileGrid: React.FC<TileGridProps> = () => {
       }
     }
   }, [timer, clickedTiles]);
+
+  const theme = useTheme();
+
+  const styles = {
+    root: {
+      position: 'absolute' as 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      bgcolor: 'background.paper',
+      border: '2px solid #000',
+      boxShadow: 24,
+      p: 4,
+      width: 400, // Default width for larger screens
+      [theme.breakpoints.down('sm')]: { // For screens smaller than or equal to sm (phone screens)
+        width: 250,
+      },
+    },
+  };
 
   return (
     <Grid 
@@ -211,20 +232,13 @@ const TileGrid: React.FC<TileGridProps> = () => {
       {/* Modal for placeholder text */}
       <Modal open={modalOpen} onClose={handleCloseModal}>
       <Box 
-      sx={{
-        position: 'absolute' as 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 400,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-      }}
+      sx={styles.root}
       >
-        <Typography id="modal-modal-title" variant="h6" component="h2">
+        <Typography id="modal-modal-title" variant="h5" component="h2">
         {gameOver ? 'Game Over' : 'Restart Game'}
+        </Typography>
+        <Typography id="modal-modal-sub-title" variant="h6" component="h4">
+          Score: {score}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
         {gameOver ? (
