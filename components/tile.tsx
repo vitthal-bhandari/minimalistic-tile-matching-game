@@ -1,9 +1,9 @@
 // Import necessary React and Material-UI components
 import React, { useEffect, useState } from 'react';
-import { Grid, Paper, Icon, Modal, Button, Box, Typography, IconProps, DialogProps, useTheme, useMediaQuery  } from '@mui/material';
+import { Grid, Paper, Icon, Modal, Button, Box, Typography, IconProps, DialogProps, useTheme, useMediaQuery, IconButton  } from '@mui/material';
 import { AssignmentIndTwoTone as icon1, AssignmentTwoTone as icon2, BugReportTwoTone as icon3, 
   CastConnectedTwoTone as icon4, CastTwoTone as icon5, ChatTwoTone as icon6, ReportProblemTwoTone as icon7, 
-  VolunteerActivismTwoTone as icon8 } from '@mui/icons-material';
+  VolunteerActivismTwoTone as icon8, X, GitHub } from '@mui/icons-material';
 import { useAppSelector, useAppDispatch } from "@/redux/hooks"
 import { addScore, setScore } from "@/redux/features/addScore/addScoreSlice"
 
@@ -142,6 +142,7 @@ const TileGrid: React.FC<TileGridProps> = () => {
   }, [timer, clickedTiles]);
 
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const styles = {
     root: {
@@ -159,11 +160,20 @@ const TileGrid: React.FC<TileGridProps> = () => {
       },
     },
     time: {
-      fontSize: "0.8rem"
+      fontSize: isMobile? "0.8rem" : "1rem",
+      justifyContent: "right",
+      display: "flex"
+    },
+    header: {
+      width:  isMobile ? "280px": '400px',
+    },
+    icons: {
+      display: "flex",
+      alignItens: "center",
+      justifyContent: "center"
     }
   };
 
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Grid 
@@ -172,7 +182,7 @@ const TileGrid: React.FC<TileGridProps> = () => {
       justifyContent="center"
       alignContent="center"
     >
-      <Grid item>
+      <Grid item sx={styles.header}>
         <Grid container>
           <Grid item xs={8}>
             <Typography  variant={isMobile ? "h4": "h3"} component="h1">
@@ -253,6 +263,37 @@ const TileGrid: React.FC<TileGridProps> = () => {
           )}
         </Typography>
         <Button onClick={resetGame} sx={{padding: '0', marginTop: '16px'}}>Restart</Button>
+        <Grid container>
+          <Grid item sx={styles.icons}>
+            <p>Find me on:</p>
+
+            <IconButton 
+              aria-label="X" 
+              href="https://twitter.com/Vit_Bhandari" // Your GitHub URL
+              target="_blank" // Open in new tab
+              rel="noopener noreferrer" // Security measures
+              sx={{
+                '&:hover': { color: 'black' }, // Hover effect
+              }}
+              title="X" // Tooltip
+            >
+              <X />
+            </IconButton>
+
+            <IconButton 
+              aria-label="GitHub"               
+              href="https://github.com" // Your GitHub URL
+              target="_blank" // Open in new tab
+              rel="noopener noreferrer" // Security measures
+              sx={{
+                '&:hover': { color: 'black' }, // Hover effect
+              }}
+              title="GitHub" // Tooltip
+            >
+              <GitHub />
+            </IconButton>
+          </Grid>
+        </Grid>
       </Box>
       </Modal>
     </Grid>
