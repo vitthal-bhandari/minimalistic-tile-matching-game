@@ -2,7 +2,7 @@
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [create-next-app](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) available at the URL [minimalistic-tile-matching-game.vercel.app](https://minimalistic-tile-matching-game.vercel.app/).
 
-I have implemented a minimalist version of the tile-matching game to create a simple game for this assignment. In this game, you have 30 seconds to match pairs of the same tiles in a 4x4 grid. That's it. Those are the rules. 
+I have implemented a minimalist version of the tile-matching game to create a simple play. In this game, you have 30 seconds to match pairs of the same tiles in a 4x4 grid. That's it. Those are the rules. 
 
 ## Scoring rules
 

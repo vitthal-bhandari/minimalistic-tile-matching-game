@@ -265,7 +265,7 @@ const TileGrid: React.FC<TileGridProps> = () => {
         <Button onClick={resetGame} sx={{padding: '0', marginTop: '16px'}}>Restart</Button>
         <Grid container>
           <Grid item sx={styles.icons}>
-            <p>Find me on:</p>
+            <p style={{display: "flex", alignItems: "center"}}>Find me on:</p>
 
             <IconButton 
               aria-label="X" 
