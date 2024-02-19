@@ -1,6 +1,6 @@
 // Import necessary React and Material-UI components
 import React, { useEffect, useState } from 'react';
-import { Grid, Paper, Icon, Modal, Button, Box, Typography, IconProps, DialogProps, useTheme  } from '@mui/material';
+import { Grid, Paper, Icon, Modal, Button, Box, Typography, IconProps, DialogProps, useTheme, useMediaQuery  } from '@mui/material';
 import { AssignmentIndTwoTone as icon1, AssignmentTwoTone as icon2, BugReportTwoTone as icon3, 
   CastConnectedTwoTone as icon4, CastTwoTone as icon5, ChatTwoTone as icon6, ReportProblemTwoTone as icon7, 
   VolunteerActivismTwoTone as icon8 } from '@mui/icons-material';
@@ -158,7 +158,12 @@ const TileGrid: React.FC<TileGridProps> = () => {
         width: 250,
       },
     },
+    time: {
+      fontSize: "0.8rem"
+    }
   };
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Grid 
@@ -170,24 +175,24 @@ const TileGrid: React.FC<TileGridProps> = () => {
       <Grid item>
         <Grid container>
           <Grid item xs={8}>
-            <Typography  variant="h3" component="h1">
+            <Typography  variant={isMobile ? "h4": "h3"} component="h1">
               Match the Tiles
             </Typography>
           </Grid>
           <Grid item xs={4} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             <Grid container direction="column">
               <Grid item>
-                <Typography>
+                <Typography sx={styles.time}>
                   score: {score}
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography>
+                <Typography sx={styles.time}>
                   high score: {highscore}
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography>
+                <Typography sx={styles.time}>
                   time: {timer}
                 </Typography>
               </Grid>
@@ -197,8 +202,8 @@ const TileGrid: React.FC<TileGridProps> = () => {
         </Grid>
       </Grid>
       <Grid container columns={{ xs: 8 }} sx={{
-          width: '400px',
-          height: '400px',
+          width:  isMobile ? "280px": '400px',
+          height: isMobile ? "280px": '400px',
           marginTop: '20px'
       }}
       >
@@ -206,8 +211,8 @@ const TileGrid: React.FC<TileGridProps> = () => {
           <Grid item key={index} xs={2}>
             <Paper
               sx = {{ 
-                  width: '100px', 
-                  height: '100px', 
+                  width: isMobile ? "70px": '100px', 
+                  height: isMobile ? "70px": '100px', 
                   transform: `rotateY(${clickedTiles[index] ? 180 : 0}deg)`, 
                   transition: 'transform 0.5s', 
                   position: 'relative',
