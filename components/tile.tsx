@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Grid, Paper, Icon, Modal, Button, Box, Typography, IconProps, DialogProps, useTheme, useMediaQuery, IconButton  } from '@mui/material';
 import { AssignmentIndTwoTone as icon1, AssignmentTwoTone as icon2, BugReportTwoTone as icon3, 
   CastConnectedTwoTone as icon4, CastTwoTone as icon5, ChatTwoTone as icon6, ReportProblemTwoTone as icon7, 
-  VolunteerActivismTwoTone as icon8, X, GitHub } from '@mui/icons-material';
+  VolunteerActivismTwoTone as icon8, X, GitHub, Share } from '@mui/icons-material';
 import { useAppSelector, useAppDispatch } from "@/redux/hooks"
 import { addScore, setScore } from "@/redux/features/addScore/addScoreSlice"
 
@@ -169,11 +169,24 @@ const TileGrid: React.FC<TileGridProps> = () => {
     },
     icons: {
       display: "flex",
-      alignItens: "center",
       justifyContent: "center"
     }
   };
 
+  const handleShareClick = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Share this awesome game!', // Optional title
+        text: 'Hey, check out this interesting 30-second game that involves tile matching:', // Optional text
+        url: 'https://minimalistic-tile-matching-game.vercel.app/',
+      })
+        .then(() => console.log('Shared successfully!'))
+        .catch((error) => console.error(`Error sharing: ${error}`));
+    } else {
+      console.log('Web Share API not supported.');
+      // Provide a fallback mechanism (e.g., copy to clipboard, manual sharing)
+    }
+  };
 
   return (
     <Grid 
@@ -264,7 +277,7 @@ const TileGrid: React.FC<TileGridProps> = () => {
           )}
         </Typography>
         <Button onClick={resetGame} sx={{padding: '0', marginTop: '16px'}}>Restart</Button>
-        <Grid container>
+        <Grid container direction={"column"}>
           <Grid item sx={styles.icons}>
             <p style={{display: "flex", alignItems: "center"}}>Find me on:</p>
 
@@ -293,6 +306,22 @@ const TileGrid: React.FC<TileGridProps> = () => {
             >
               <GitHub />
             </IconButton>
+          </Grid>
+
+          <Grid item sx={styles.icons}>
+            <p style={{display: "flex", alignItems: "center"}}>Share:</p>
+
+            <IconButton 
+              aria-label="Share" 
+              sx={{
+                '&:hover': { color: 'black' }, // Hover effect
+              }}
+              title="Share" // Tooltip
+              onClick={handleShareClick}
+            >
+              <Share />
+            </IconButton>
+
           </Grid>
         </Grid>
       </Box>
