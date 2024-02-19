@@ -11,10 +11,12 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: 'Minimalistic Tile Matching Game',
   description: 'A minimalistic 30-second tile matching game made for fun',
+  metadataBase: new URL('https://minimalistic-tile-matching-game.vercel.app'),
   openGraph: {
     title: 'Minimalistic Tile Matching Game',
     description: 'A minimalistic 30-second tile matching game made for fun',
     url: 'https://minimalistic-tile-matching-game.vercel.app/',
+    images: '/opengraph-image.jpg',
   },
 }
 
