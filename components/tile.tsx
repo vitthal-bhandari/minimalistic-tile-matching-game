@@ -181,6 +181,7 @@ const TileGrid: React.FC<TileGridProps> = () => {
       direction="column"
       justifyContent="center"
       alignContent="center"
+      sx={{marginTop: '-30px'}}
     >
       <Grid item sx={styles.header}>
         <Grid container>
@@ -282,7 +283,7 @@ const TileGrid: React.FC<TileGridProps> = () => {
 
             <IconButton 
               aria-label="GitHub"               
-              href="https://github.com" // Your GitHub URL
+              href="https://github.com/vitthal-bhandari/minimalistic-tile-matching-game" // Your GitHub URL
               target="_blank" // Open in new tab
               rel="noopener noreferrer" // Security measures
               sx={{
